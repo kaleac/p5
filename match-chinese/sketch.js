@@ -80,11 +80,11 @@ function draw() {
 
 function flip(i) {
   vocabWord = vocab[i];
-  // if (nCF == 2) {
-  //   displayMessage('only 2 cards can be flipped at a time :(', canvasLength/2, canvasLength, 16);
-  //   // how do i wipe this message after 1.5 seconds?
-  //   return;
-  // }
+  if (nCF == 2) {
+    // displayMessage('only 2 cards can be flipped at a time :(', canvasLength/2, canvasLength, 16);
+    // how do i wipe this message after 1.5 seconds?
+    return;
+  }
   nCF++;
   numFlips++;
 
