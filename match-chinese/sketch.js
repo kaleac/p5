@@ -1,6 +1,6 @@
 let canvasLength;
 let locations;
-let numCF;
+let nCF;
 let flipped;
 let images;
 let img;
@@ -12,41 +12,47 @@ let vocab;
 let cardsLeft;
 let gameWon;
 var firebackbutton;
+let numFlips;
+let wait;
 
 var firecbutton;
 /** need to match locations to flipped, images (shuffled)
 */
 function setup() {
-  canvasLength = 2000;
+  // text
+  // don't do until . .
+  canvasLength = 700;
   locations = [];
-  numCF = 0;
+  nCF = 0;
   flipped = new Map();
   buttons = new Map();
   indices = new Map();
-  vocab = ['chinesefire', 'water', 'earth', '', 'fire', '', '', '', 'chineseearth', '', '', 'chinesewater', '', '', '', ''];
+  vocab = ['chinesefire', 'sun', 'chinesegold', 'wood', 'fire', 'mountain', 'chinesewood', 'chinesemoon', 'chineseearth', 'earth', 'water', 'chinesewater', 'gold', 'moon', 'chinesemountain', 'chinesesun'];
   cardsLeft = 16;
   gameWon = false;
+  cardW = 80;
+  cardL = 100;
+  numFlips = 0;
+  wait = false;
   createCanvas(canvasLength, canvasLength);
+  // setTimeout(displayCongratulations, 3000);
 
-  cardW = 40;
-  cardL = 60;
   let x = (canvasLength / 5);
-  for (i = x; i < canvasLength; i = i + x + 40) {
-    for (j = x; j < canvasLength; j = j + x + 60) {
+  for (let i = x - 30; i < canvasLength; i = i + x + 10) {
+    for (j = x - 30; j < canvasLength; j = j + x + 10) {
       let direction = [i - 15, j - 15];
       locations.push(direction);
     }
   }
-  for (i = 0; i < locations.length; i++) {
+  for (let i = 0; i < locations.length; i++) {
     let word = vocab[i];
     let loc = locations[i];
     let x = loc[0];
     let y = loc[1];
     indices.set(word, i);
-
-    let button = createImg('assets/back.png', word+' back', () => {button.size(10, AUTO)});
+    let button = createImg('assets/back.png', word+' back', '', () => {button.size(cardW, cardL)});
     button.position(x, y);
-    button.mousePressed(x => flip(word));
+    button.mousePressed(() => {flip(i)});
 
     // add current button to buttons map
     buttons.set(word, button);
@@ -57,42 +63,65 @@ function setup() {
 function draw() {
   background(0);
   resizeCanvas(windowWidth, windowHeight);
+  if (!gameWon) {
+    displayMessage('number of flips: \n'+numFlips, canvasLength, 4 * canvasLength/5, 16);
+  }
+  // if (wait) {
+  //   sleep(1000);
+  //   wait = false;
+  // }
   if (gameWon) {
+    // CHANGE THIS TO DISPLAYMESSAGE
+    //clear(); // trying to clear canvas
+    sleep(1000);
     displayCongratulations();
   }
 }
 
-function flip(vocabWord) {
-  if (nCF == 2) {
-    // display msg
-    displayMessage('only 2 cards can be flipped at a time :(');
-    // how do i wipe this message after 1.5 seconds?
-    return;
-  }
+function flip(i) {
+  vocabWord = vocab[i];
+  // if (nCF == 2) {
+  //   displayMessage('only 2 cards can be flipped at a time :(', canvasLength/2, canvasLength, 16);
+  //   // how do i wipe this message after 1.5 seconds?
+  //   return;
+  // }
+  nCF++;
+  numFlips++;
+
   // remove whatever is at our vocab word right now
-  let index = indices.get(vocabWord);
   let curButton = buttons.get(vocabWord);
-  let loc = locations[index];
+  curButton.remove();
+  // sleep(1000);
+  let loc = locations[i];
   let x = loc[0];
   let y = loc[1];
   let complement;
   if (vocabWord.slice(0, 7) == 'chinese') {
+    console.log(vocabWord);
     complement = vocabWord.slice(7);
+    console.log(complement);
   } else {
     complement = 'chinese' + vocabWord;
   }
-  // newButton = createImg('assets/chinesefire.png', vocabWord);
-  newButton = createImg('assets/'+vocabWord+'.png', vocabWord);
+  let newButton = createImg('assets/'+vocabWord+'.png', vocabWord, '', () => {newButton.size(cardW, cardL)});
   newButton.position(x, y);
-  newButton.mousePressed(x => flipBack(vocabWord)); // replace flipBack with lambda
+  newButton.mousePressed(() => flipBack(i));
   flipped.set(vocabWord, true);
+  buttons.set(vocabWord, newButton);
   if (nCF == 2) {
-    // the matching card is also flipped
+    //the matching card is also flipped
     if (flipped.get(complement)) {
       // remove newButton after waiting 2 seconds?
       complementButton = buttons.get(complement);
-      newButton.remove();
-      complementButton.remove();
+      console.log(vocabWord);
+      console.log(vocabWord.length);
+      // newButton = createImg('assets/'+vocabWord+'.png', vocabWord, '', () => {newButton.size(cardW, cardL)});
+      // newButton.position(x, y);
+      setTimeout(() => {complementButton.remove(); newButton.remove();}, 800);
+      console.log(complement);
+      console.log(complement.length);
+      // complementButton.remove();
+      // newButton.remove();
       buttons.set(vocabWord, null);
       buttons.set(complement, null);
       flipped.set(vocabWord, null);
@@ -102,13 +131,15 @@ function flip(vocabWord) {
       if (cardsLeft == 0) {
         gameWon = true;
       }
+      wait = true;
     }
   }
-  curButton.remove();
-  nCF++;
+
+
 }
 
-function flipBack(vocabWord) {
+function flipBack(i) {
+  vocabWord = vocab[i];
   let index = indices.get(vocabWord);
   let curButton = buttons.get(vocabWord);
   let loc = locations[index];
@@ -117,22 +148,34 @@ function flipBack(vocabWord) {
   nCF--;
   flipped.set(vocabWord, false);
   curButton.remove();
-  backbutton = createImg('assets/back.jpg', vocabWord+' back');
+  backbutton = createImg('assets/back.png', vocabWord+' back', '', () => {backbutton.size(cardW, cardL)});
   backbutton.position(x, y);
-  backbutton.mousePressed(x => flip(vocabWord)); // replace flip with lambda
+  backbutton.mousePressed(() => flip(i));
+  buttons.set(vocabWord, backbutton);
 }
 
 function displayCongratulations() {
-  textSize(32);
-  text('congrats! you just learned 8 chinese characters!', 10, 60);
-  fill(0, 102, 153, 51);
+  textSize(28);
+  textFont('Monaco');
+  text('congrats!\nyou just learned 8 chinese characters!', canvasLength/2, canvasLength/2);
+  fill(0, 102, 153);
 }
 
-function displayMessage(msg) {
-  textSize(20);
-  text(msg, 10, 60);
-  fill(0, 102, 153, 51);
+function displayMessage(msg, x, y, size) {
+  textSize(size);
+  textFont('Monaco');
+  text(msg, x, y);
+  fill(0, 102, 153);
 }
+
+function sleep(milliseconds) {
+  const date = Date.now();
+  let currentDate = null;
+  do {
+    currentDate = Date.now();
+  } while (currentDate - date < milliseconds);
+}
+
 // function drawFireBack() {
 //   let index = indices.get('fire');
 //   let loc = locations[index];
