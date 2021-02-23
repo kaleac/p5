@@ -66,10 +66,6 @@ function draw() {
   if (!gameWon) {
     displayMessage('number of flips: \n'+numFlips, canvasLength, 4 * canvasLength/5, 16);
   }
-  // if (wait) {
-  //   sleep(1000);
-  //   wait = false;
-  // }
   if (gameWon) {
     // CHANGE THIS TO DISPLAYMESSAGE
     //clear(); // trying to clear canvas
