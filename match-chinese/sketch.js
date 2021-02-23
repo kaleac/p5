@@ -3,7 +3,6 @@ let locations;
 let nCF;
 let flipped;
 let images;
-let img;
 let cardW;
 let cardL;
 let buttons;
@@ -11,11 +10,8 @@ let indices;
 let vocab;
 let cardsLeft;
 let gameWon;
-var firebackbutton;
 let numFlips;
-let wait;
 
-var firecbutton;
 /** need to match locations to flipped, images (shuffled)
 */
 function setup() {
@@ -33,7 +29,6 @@ function setup() {
   cardW = 80;
   cardL = 100;
   numFlips = 0;
-  wait = false;
   createCanvas(canvasLength, canvasLength);
   // setTimeout(displayCongratulations, 3000);
 
@@ -62,14 +57,10 @@ function setup() {
 
 function draw() {
   background(0);
-  resizeCanvas(windowWidth, windowHeight);
+  // resizeCanvas(windowWidth, windowHeight);
   if (!gameWon) {
     displayMessage('number of flips: \n'+numFlips, canvasLength, 4 * canvasLength/5, 16);
   }
-  // if (wait) {
-  //   sleep(1000);
-  //   wait = false;
-  // }
   if (gameWon) {
     // CHANGE THIS TO DISPLAYMESSAGE
     //clear(); // trying to clear canvas
@@ -81,8 +72,6 @@ function draw() {
 function flip(i) {
   vocabWord = vocab[i];
   if (nCF == 2) {
-    // displayMessage('only 2 cards can be flipped at a time :(', canvasLength/2, canvasLength, 16);
-    // how do i wipe this message after 1.5 seconds?
     return;
   }
   nCF++;
@@ -115,13 +104,9 @@ function flip(i) {
       complementButton = buttons.get(complement);
       console.log(vocabWord);
       console.log(vocabWord.length);
-      // newButton = createImg('assets/'+vocabWord+'.png', vocabWord, '', () => {newButton.size(cardW, cardL)});
-      // newButton.position(x, y);
       setTimeout(() => {complementButton.remove(); newButton.remove();}, 800);
       console.log(complement);
       console.log(complement.length);
-      // complementButton.remove();
-      // newButton.remove();
       buttons.set(vocabWord, null);
       buttons.set(complement, null);
       flipped.set(vocabWord, null);
@@ -131,7 +116,6 @@ function flip(i) {
       if (cardsLeft == 0) {
         gameWon = true;
       }
-      wait = true;
     }
   }
 
@@ -175,65 +159,3 @@ function sleep(milliseconds) {
     currentDate = Date.now();
   } while (currentDate - date < milliseconds);
 }
-
-// function drawFireBack() {
-//   let index = indices.get('fire');
-//   let loc = locations[index];
-//   let x = loc[0];
-//   let y = loc[1];
-//   nCF--;
-//   firebackbutton = createImg('assets/back.jpg', 'fire back');
-//   firebackbutton.position(x, y);
-//   firebackbutton.mousePressed(flipFire);
-// }
-// function flipFireBack() {
-//   firecbutton.remove();
-//   drawFireBack();
-//   nCF--;
-// }
-
-// function flipFire() {
-//   let index = indices.get('fire');
-//   let curButton = buttons.get('fire');
-//   let loc = locations[index];
-//   let x = loc[0];
-//   let y = loc[1];
-//   if (nCF == 2) {
-//     return;
-//   }
-//
-//   firecbutton = createImg('assets/chinesefire.png', 'chinese fire');
-//   firecbutton.position(x, y);
-//   firecbutton.mousePressed(flipFireBack);
-//   flipped.set('firec', true);
-//   if (nCF == 2) {
-//     if (flipped.get('fire')) {
-//       nCF = 0;
-//       firecbutton.remove();
-//       firebutton.remove();
-//     }
-//   }
-//
-//   curButton.remove();
-//   firebackbutton.remove();
-//   nCF++;
-// }
-// function flipCard() {
-//
-// }
-//   if (keyIsPressed) {
-//     for (int charIndex = 0; i < keys.length < i++) {
-//       if (keys[charIndex] == key) {
-
-//       }
-//     }
-  // }
-
-// function cardClicked(x, y, )
-// function keyPressed() {
-//   if (value === 0) {
-//     value = 255;
-//   } else {
-//     value = 0;
-//   }
-// }
