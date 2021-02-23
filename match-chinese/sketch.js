@@ -61,15 +61,15 @@ function setup() {
 }
 
 function draw() {
-  background(0);
-  // resizeCanvas(windowWidth, windowHeight);
+  background(255);
+  resizeCanvas(windowWidth, windowHeight);
   if (!gameWon) {
     displayMessage('number of flips: \n'+numFlips, canvasLength, 4 * canvasLength/5, 16);
   }
   if (gameWon) {
     // CHANGE THIS TO DISPLAYMESSAGE
     //clear(); // trying to clear canvas
-    sleep(1000);
+    sleep(800);
     displayCongratulations();
   }
 }
@@ -84,10 +84,8 @@ function flip(i) {
   nCF++;
   numFlips++;
 
-  // remove whatever is at our vocab word right now
   let curButton = buttons.get(vocabWord);
   curButton.remove();
-  // sleep(1000);
   let loc = locations[i];
   let x = loc[0];
   let y = loc[1];
@@ -105,19 +103,14 @@ function flip(i) {
   flipped.set(vocabWord, true);
   buttons.set(vocabWord, newButton);
   if (nCF == 2) {
-    //the matching card is also flipped
+    // if the matching card is also flipped
     if (flipped.get(complement)) {
-      // remove newButton after waiting 2 seconds?
       complementButton = buttons.get(complement);
       console.log(vocabWord);
       console.log(vocabWord.length);
-      // newButton = createImg('assets/'+vocabWord+'.png', vocabWord, '', () => {newButton.size(cardW, cardL)});
-      // newButton.position(x, y);
       setTimeout(() => {complementButton.remove(); newButton.remove();}, 800);
       console.log(complement);
       console.log(complement.length);
-      // complementButton.remove();
-      // newButton.remove();
       buttons.set(vocabWord, null);
       buttons.set(complement, null);
       flipped.set(vocabWord, null);
@@ -130,8 +123,6 @@ function flip(i) {
       wait = true;
     }
   }
-
-
 }
 
 function flipBack(i) {
@@ -153,7 +144,7 @@ function flipBack(i) {
 function displayCongratulations() {
   textSize(28);
   textFont('Monaco');
-  text('congrats!\nyou just learned 8 chinese characters!', canvasLength/2, canvasLength/2);
+  text('\t\t\t\t\t\tcongrats!\nyou just learned 8 chinese characters!', canvasLength/2, canvasLength/2);
   fill(0, 102, 153);
 }
 
@@ -171,65 +162,3 @@ function sleep(milliseconds) {
     currentDate = Date.now();
   } while (currentDate - date < milliseconds);
 }
-
-// function drawFireBack() {
-//   let index = indices.get('fire');
-//   let loc = locations[index];
-//   let x = loc[0];
-//   let y = loc[1];
-//   nCF--;
-//   firebackbutton = createImg('assets/back.jpg', 'fire back');
-//   firebackbutton.position(x, y);
-//   firebackbutton.mousePressed(flipFire);
-// }
-// function flipFireBack() {
-//   firecbutton.remove();
-//   drawFireBack();
-//   nCF--;
-// }
-
-// function flipFire() {
-//   let index = indices.get('fire');
-//   let curButton = buttons.get('fire');
-//   let loc = locations[index];
-//   let x = loc[0];
-//   let y = loc[1];
-//   if (nCF == 2) {
-//     return;
-//   }
-//
-//   firecbutton = createImg('assets/chinesefire.png', 'chinese fire');
-//   firecbutton.position(x, y);
-//   firecbutton.mousePressed(flipFireBack);
-//   flipped.set('firec', true);
-//   if (nCF == 2) {
-//     if (flipped.get('fire')) {
-//       nCF = 0;
-//       firecbutton.remove();
-//       firebutton.remove();
-//     }
-//   }
-//
-//   curButton.remove();
-//   firebackbutton.remove();
-//   nCF++;
-// }
-// function flipCard() {
-//
-// }
-//   if (keyIsPressed) {
-//     for (int charIndex = 0; i < keys.length < i++) {
-//       if (keys[charIndex] == key) {
-
-//       }
-//     }
-  // }
-
-// function cardClicked(x, y, )
-// function keyPressed() {
-//   if (value === 0) {
-//     value = 255;
-//   } else {
-//     value = 0;
-//   }
-// }
